@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<gatein-resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_3 http://www.gatein.org/xml/ns/gatein_resources_1_3"
+    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_3">
+
+  <portlet-skin>
+    <application-name>ldap-configuration-portlet</application-name>
+    <portlet-name>LdapConfigPortlet</portlet-name>
+    <skin-name>Default</skin-name>
+    <css-path>/skin/css/ldap.css</css-path>
+    <css-priority>1</css-priority>
+  </portlet-skin>
+</gatein-resources>

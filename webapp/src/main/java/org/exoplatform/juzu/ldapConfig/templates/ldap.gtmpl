@@ -1,0 +1,22 @@
+#{title value=ldapType/}
+#{param name=ldap/}
+
+<div id="taskViewContainer">
+  <div id="taskProperties">
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label class="col-sm-2 control-label"><strong>LDAP Type</strong></label>
+
+      </div>
+
+    </form>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <div id="ldapConfig" class="pull-right">
+    <div>
+      <p class="text-primary btn-link"><a href="@{ index()}">Update LDAP Configuration</a></p>
+    </div>
+  </div>
+</div>

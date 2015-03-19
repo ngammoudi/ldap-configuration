@@ -1,0 +1,107 @@
+<nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.5" xmlns:mix="http://www.jcp.org/jcr/mix/1.5" xmlns:jcr="http://www.jcp.org/jcr/1.5" >
+
+<nodeType name="exo:ldapConfig" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+    <supertypes>
+        <supertype>nt:base</supertype>
+    </supertypes>
+        <propertyDefinitions>
+
+            <propertyDefinition name="exo:ldapType" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapUrl" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapAuthentication" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapAdminDn" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapPool" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapPoolMax" requiredType="Integer" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapPoolTimeout" requiredType="Integer" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapPoolProtocol" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapRO" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapSearchLinmit" requiredType="Integer" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapInsensitive" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapUBaseDn" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapUsersId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapUsersFilter" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapUsersMapping" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapUsersClasses" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapScope" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapGBaseDn" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapGroupsId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapGroupsFilter" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapGroupsMap" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapGroupsClasses" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapGroupScope" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+                <valueConstraints />
+            </propertyDefinition>
+
+            <propertyDefinition name="exo:ldapfileConfig" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+                <valueConstraints />
+            </propertyDefinition>
+
+        </propertyDefinitions>
+    </nodeType>
+</nodeTypes>

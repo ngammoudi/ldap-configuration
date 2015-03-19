@@ -1,0 +1,237 @@
+#{param name=ldapUrl/}
+#{param name=ldapType/}
+#{param name=ldapAdminDN/}
+#{param name=ldapAdminPwd/}
+#{param name=ldapAuthType/}
+#{param name=ldapUBaseDN/}
+#{param name=ldapGBaseDN/}
+#{param name=usersId/}
+#{param name=usersFilter/}
+#{param name=usersAttr/}
+#{param name=usersClasses/}
+#{param name=usersSearch/}
+#{param name=message/}
+<!DOCTYPE html>
+<html>  
+<head>
+     <script>
+       $(function() {
+         $( "#accordion" ).accordion({
+                                      collapsible: true,
+                                      autoHeight: false
+                    });
+         $("#actionfail").hide();
+         $("#actionsuccess").hide();
+       });
+       </script>
+</head>
+
+<body>
+<div class="alert alert-success" id="actionsuccess"></div>
+<div class="alert alert-error" id="actionfail"></div>
+<div id=ldapSettings class="ldapSettings">
+  <h5>LDAP Settings</h5>
+    <br/>
+  <p>${ldapDescriptionLabel}</p>
+  <br/>
+    <div class="table">
+        <div class="table-row">
+            <div class="col">
+                     <label class="checkbox" for="ldapAuthLabel">
+                          <input id="ldapAuthLabel" name="ldapAuthLabel" type="checkbox"/>${ldapAuthenticationLabel}
+                     </label>
+            </div>
+            <div class="col">
+                 <div class="ldapConnect>
+                      <input type="checkbox" tabindex="3" class="yesno" checked="checked" style="visibility: hidden;" id="ldapAuth" name="ldapAuth" value="true" data-yes="Yes" data-no="No"/>
+                      <label class="rememberTxt" for="ldapAuth"></label>
+                 </div>
+            </div>
+            <div class="col">
+                <a class="btn btn-primary" onclick="resetSettings()">${resetLabel}</a>
+            </div>
+    	</div>
+    </div>
+</div>
+<div id="accordion">
+  	<h5>Connection</h5>
+ 		<div id="ldapConfig" class="ldapConnection">
+        	<form id="ldapForm" action="@{checkConnection()}" method="post" class="form-horizontal">
+            	<div class="table">
+                    <div class="table-row">
+                        <div class="col">
+                 			<label class="checkbox" for="ldapLabel">
+                           		<input id="ldapLabel" name="ldapLabel" type="checkbox" class="input_control" value="ldapType"/>${ldapTypeLabel}
+                           </label>
+                 		</div>
+                 		<div class="col">
+                  			<select id="ldapType" name="ldapType" class="input-lg select-group form-control" value="${ldapType}"disabled="true">
+                               <option selected class="ldapTypePlaceholder">generic</option>
+                               <option selected class="ldapTypePlaceholder">ldap</option>
+                               <option selected class="ldapTypePlaceholder">opends</option>
+                               <option selected class="ldapTypePlaceholder">ad</option>
+                            </select>
+                 	</div>
+                </div>
+
+                <div class="table-row">
+                    <div class="col">
+                           <label class="checkbox" for="ldapUrlLabel">
+                           <input id="ldapUrlLabel" name="ldapUrlLabel" type="checkbox" class="input_control" value="ldapUrl"/>${ldapUrlLabel}
+                           </label>
+                    </div>
+                    <div class="col">
+                           <input id="ldapUrl" name="ldapUrl" placeholder="ldap url Provider" required="" type="text" value="${ldapUrl}" disabled="true"/>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="col">
+                           <label class="checkbox" for="ldapDNLabel">
+                           <input id="ldapDNLabel" name="ldapDNLabel" type="checkbox" class="input_control" value="ldapAdminDN"/>${ldapAdminDNLabel}
+                           </label>
+                    </div>
+                    <div class="col">
+                           <input id="ldapAdminDN" name="ldapAdminDN" placeholder="ldap admin DN" required="" type="text" value="${ldapAdminDN}" disabled="true" />
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="col">
+                           <label class="checkbox" for="adminPwdLabel">
+                           <input id="adminPwdLabel" name="adminPwdLabel" type="checkbox" class="input_control" value="ldapAdminPwd"/>${ldapPwdLabel}
+                           </label>
+                    </div>
+                    <div class="col">
+                           <input type="password" name="ldapAdminPwd" id="ldapAdminPwd" class="inputFieldMini" value="${ldapAdminPwd}" disabled="true"/>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="col">
+                           <label class="checkbox" for="readOnlyLabel">
+                           <input id="readOnlyLabel" name="readOnlyLabel" type="checkbox"/>Read-only
+                           </label>
+                    </div>
+                    <div class="col">
+                            <div class="ldapRo>
+                                <input type="checkbox" tabindex="3" class="yesno" checked="checked" style="visibility: hidden;" id="readonly" name="readonly" value="true" data-yes="Yes" data-no="No"/>
+                                <label class="rememberTxt" for="readonly"></label>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="col">
+                           <label class="checkbox" for="authLabel">
+                           <input id="authLabel" name="authLabel" type="checkbox" class="input_control" value="ldapAuthType"/>${ldapAuthLabel}
+                           </label>
+                    </div>
+                    <div class="col">
+                            <select id="ldapAuthType" name="ldapAuthType" class="input-lg select-group form-control" value="${ldapAuthType}" disabled="true">
+                                <option selected class="authTypePlaceholder">Simple</option>
+                                <option selected class="authTypePlaceholder">DIGEST-MD5</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="col">
+                           <label class="checkbox" for="groupDNLabel">
+                           <input id="groupDNLabel" name="groupDNLabel" type="checkbox" class="input_control" value="ldapGBaseDN"/>${ldapGBaseLabel}
+                           </label>
+                    </div>
+                    <div class="col">
+                           <input id="ldapGBaseDN" name="ldapGBaseDN" placeholder="group base DN" type="text" value="${ldapGBaseDN}" disabled="true"/>
+                    </div>
+                </div>
+                    
+
+                    <!-- Button -->
+                        <div class="control-group">
+                            <label class="control-label" for="createLdapConfig"></label>
+                            <div class="controls">
+                             	<button id="createLdapConfig" name="createLdapConfig" class="btn btn-primary" type="submit">${saveLabel}</button>
+                             	<a class="btn btn-primary" onclick="checkConnection()">${testLabel}</a>
+                            </div>
+                        </div>
+            </div>
+        </form>
+    </div> 
+<h5>Users</h5>
+    <div id=userForm>
+        <div class="table">
+            <div class="table-row">
+              <div class="col">
+                     <label class="checkbox" for="userDNLabel">
+                     <input id="userDNLabel" name="userDNLabel" type="checkbox" class="input_control" value="ldapUBaseDN"/>${ldapUBaseLabel}
+                     </label>
+              </div>
+              <div class="col">
+                    <input id="ldapUBaseDN" name="ldapUBaseDN" placeholder="user base DN" type="text" value="${ldapUBaseDN}" disabled="true"/>
+              </div>
+            </div>
+            <div class="table-row">
+              <div class="col">
+                     <label class="checkbox" for="userIdLabel">
+                     <input id="userIdLabel" name="userIdLabel" type="checkbox" class="input_control" value="usersId"/>${ldapUsersLabel}
+                     </label>
+              </div>
+              <div class="col">
+                    <input id="usersId" name="usersId" placeholder="user base DN" type="text" value="${usersId}" disabled="true"/>
+              </div>
+            </div>
+            <div class="table-row">
+                <div class="col">
+                     <label class="checkbox" for="usersFilterLabel">
+                     <input id="usersFilterLabel" name="usersFilterLabel" type="checkbox" class="input_control" value="usersFilter"/>${ldapUsersFilterLabel}
+                     </label>
+                </div>
+                <div class="col">
+                    <input id="usersFilter" name="usersFilter" placeholder="user base DN" type="text" value="${usersFilter}" disabled="true"/>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="col">
+                     <label class="checkbox" for="usersAttLabel">
+                     <input id="usersAttLabel" name="usersAttLabel" type="checkbox" class="input_control" value="usersAttr"/>${ldapUsersAttrLabel}
+                     </label>
+                </div>
+                <div class="col">
+                    <input id="usersAttr" name="usersAttr" placeholder="user base DN" type="text" value="${usersAttr}" disabled="true"/>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="col">
+                     <label class="checkbox" for="usersClassLabel">
+                     <input id="usersClassLabel" name="usersClassLabel" type="checkbox" class="input_control" value="usersClasses"/>${ldapUserClsLabel}
+                     </label>
+                </div>
+                <div class="col">
+                    <input id="usersClasses" name="usersClasses" placeholder="user base DN" type="text" value="${usersClasses}" disabled="true"/>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="col">
+                    <label class="checkbox" for="usersSearchLabel">
+                    <input id="usersSearchLabel" name="usersSearchLabel" type="checkbox" class="input_control" value="usersSearch"/>${ldapUsersSearchLabel}
+                    </label>
+                </div>
+                <div class="col">
+                    <select id="usersSearch" name="usersSearch" class="input-lg select-group form-control" value="${usersSearch}" disabled="true">
+                        <option selected class="usersSearchPlaceholder">sub-tree</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    </div>  
+<h5>Groups</h5>
+    <div>
+             
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.  
+ 
+    </div>   
+</div>
+</body>  
+</html>  
