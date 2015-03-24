@@ -10,7 +10,14 @@
 #{param name=usersAttr/}
 #{param name=usersClasses/}
 #{param name=usersSearch/}
+#{param name=groupsId/}
+#{param name=groupsFilter/}
+#{param name=groupsAttr/}
+#{param name=groupsClasses/}
+#{param name=groupsSearch/}
 #{param name=message/}
+#{param name=connectionSuccessLabel/}
+#{param name=connectionFailureLabel/}
 <!DOCTYPE html>
 <html>  
 <head>
@@ -27,12 +34,10 @@
 </head>
 
 <body>
-<div class="alert alert-success" id="actionsuccess"></div>
-<div class="alert alert-error" id="actionfail"></div>
+
 <div id=ldapSettings class="ldapSettings">
-  <h5>LDAP Settings</h5>
-    <br/>
-  <p>${ldapDescriptionLabel}</p>
+  <h4 class="titleWithBorder">${ldapSettingsLabel}</h4>
+  <p style="padding-left: 10px">${ldapDescriptionLabel}</p>
   <br/>
     <div class="table">
         <div class="table-row">
@@ -52,6 +57,8 @@
             </div>
     	</div>
     </div>
+    <div class="alert alert-success" id="actionsuccess"></div>
+    <div class="alert alert-error" id="actionfail"></div>
 </div>
 <div id="accordion">
   	<h5>Connection</h5>
@@ -151,8 +158,7 @@
                         <div class="control-group">
                             <label class="control-label" for="createLdapConfig"></label>
                             <div class="controls">
-                             	<button id="createLdapConfig" name="createLdapConfig" class="btn btn-primary" type="submit">${saveLabel}</button>
-                             	<a class="btn btn-primary" onclick="checkConnection()">${testLabel}</a>
+                             	<input type="button" class="btn btn-primary" value="${testLabel}" onclick="checkConnection();" />
                             </div>
                         </div>
             </div>
@@ -219,19 +225,94 @@
                 </div>
                 <div class="col">
                     <select id="usersSearch" name="usersSearch" class="input-lg select-group form-control" value="${usersSearch}" disabled="true">
-                        <option selected class="usersSearchPlaceholder">sub-tree</option>
+                        <option selected class="usersSearchPlaceholder">subTree</option>
                     </select>
                 </div>
             </div>
+                 <!-- Button -->
+                 <div class="control-group">
+                    <label class="control-label" for="createLdapConfig"></label>
+                        <div class="controls">
+                           <input type="button" class="btn btn-primary" value="${searchLabel}" onclick="searchUsers();" />
+                        </div>
+                 </div>
 
         </div>
     </div>  
 <h5>Groups</h5>
-    <div>
-             
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.  
- 
-    </div>   
+    <div id=groupsForm>
+      <div class="table">
+        <div class="table-row">
+                    <div class="col">
+                           <label class="checkbox" for="groupDNLabel">
+                           <input id="groupDNLabel" name="groupDNLabel" type="checkbox" class="input_control" value="ldapGBaseDN"/>${ldapGBaseLabel}
+                           </label>
+                    </div>
+                    <div class="col">
+                           <input id="ldapGBaseDN" name="ldapGBaseDN" placeholder="group base DN" type="text" value="${ldapGBaseDN}" disabled="true"/>
+                    </div>
+          </div>
+          <div class="table-row">
+              <div class="col">
+                     <label class="checkbox" for="groupIdLabel">
+                     <input id="groupIdLabel" name="groupIdLabel" type="checkbox" class="input_control" value="groupsId"/>${ldapGroupsLabel}
+                     </label>
+              </div>
+              <div class="col">
+                    <input id="groupsId" name="groupsId" placeholder="group base DN" type="text" value="${groupsId}" disabled="true"/>
+              </div>
+            </div>
+            <div class="table-row">
+                <div class="col">
+                     <label class="checkbox" for="groupsFilterLabel">
+                     <input id="groupsFilterLabel" name="groupsFilterLabel" type="checkbox" class="input_control" value="groupsFilter"/>${ldapGroupsFilterLabel}
+                     </label>
+                </div>
+                <div class="col">
+                    <input id="groupsFilter" name="groupsFilter" placeholder="user base DN" type="text" value="${groupsFilter}" disabled="true"/>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="col">
+                     <label class="checkbox" for="groupsAttLabel">
+                     <input id="groupsAttLabel" name="groupsAttLabel" type="checkbox" class="input_control" value="groupsAttr"/>${ldapGroupsAttrLabel}
+                     </label>
+                </div>
+                <div class="col">
+                    <input id="groupsAttr" name="groupsAttr" placeholder="user base DN" type="text" value="${groupsAttr}" disabled="true"/>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="col">
+                     <label class="checkbox" for="groupsClassLabel">
+                     <input id="groupsClassLabel" name="groupsClassLabel" type="checkbox" class="input_control" value="groupsClasses"/>${ldapGroupsClsLabel}
+                     </label>
+                </div>
+                <div class="col">
+                    <input id="groupsClasses" name="groupsClasses" placeholder="user base DN" type="text" value="${groupsClasses}" disabled="true"/>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="col">
+                    <label class="checkbox" for="groupsSearchLabel">
+                    <input id="groupsSearchLabel" name="groupsSearchLabel" type="checkbox" class="input_control" value="groupsSearch"/>${ldapGroupsSearchLabel}
+                    </label>
+                </div>
+                <div class="col">
+                    <select id="groupsSearch" name="groupsSearch" class="input-lg select-group form-control" value="${groupsSearch}" disabled="true">
+                        <option selected class="groupsSearchPlaceholder">subTree</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Button -->
+            <div class="control-group">
+                 <label class="control-label" for="createLdapConfig"></label>
+                    <div class="controls">
+                        <button id="createLdapConfig" name="createLdapConfig" class="btn btn-primary" type="submit">${saveLabel}</button>
+                    </div>
+            </div>
+      </div>       
+                 
 </div>
 </body>  
 </html>  

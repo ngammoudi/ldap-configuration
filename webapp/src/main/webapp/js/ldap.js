@@ -43,7 +43,30 @@ function resetSettings() {
         $("#ldapAuthType").val(data.ldapAuthType);
         $("#ldapUBaseDn").val(data.ldapUBaseDN);
         $("#ldapGBaseDN").val(data.ldapGBaseDN);
+        disableFields();
+
     });
+}
+
+function disableFields(){
+  $("#ldapUrl").prop('disabled',true);
+  $("#ldapType").prop('disabled',true);
+  $("#ldapAdminDN").prop('disabled',true);
+  $("#ldapAdminPwd").prop('disabled',true);
+  $("#ldapAuthType").prop('disabled',true);
+  $("#ldapUBaseDN").prop('disabled',true);
+  $("#ldapGBaseDN").prop('disabled',true);
+  $("#usersId").prop('disabled',true);
+  $("#usersFilter").prop('disabled',true);
+  $("#usersAttr").prop('disabled',true);
+  $("#usersClasses").prop('disabled',true);
+  $("#usersSearch").prop('disabled',true);
+  $("#groupsId").prop('disabled',true);
+  $("#groupsFilter").prop('disabled',true);
+  $("#groupsAttr").prop('disabled',true);
+  $("#groupsClasses").prop('disabled',true);
+  $("#groupsSearch").prop('disabled',true);
+  $('.input_control').prop('checked', false);
 }
 function checkConnection() {
 var ldapUrl = $("#ldapUrl").val();
@@ -56,19 +79,30 @@ var ldapAuthType = $("#ldapAuthType").val();
         data: {"ldapUrl":ldapUrl,"ldapAdminDN":ldapAdminDN,"ldapAdminPwd":ldapAdminPwd,"ldapAuthType":ldapAuthType}
     }).done(function(data) {
     if(data.message=="ok") {
-        $("#actionsuccess").html("Connection successful !! " + '<i class="uiIconSuccess"></i>');
+        $("#actionsuccess").html('<i class="uiIconSuccess"></i>'+data.connectionSuccessLabel);
         $("#actionsuccess").width("600px")   ;
          $("#actionsuccess").css("left",($( window ).width()/2) - ($("#actionsuccess").width()/2));
         $("#actionsuccess").show().delay(10000).fadeOut();
     }
     else{
-        $("#actionfail").html("Connection failed -- Please check the logs for more information !!" +'<i class="uiIconError"></i>');
+        $("#actionfail").html('<i class="uiIconError" style="align:right"></i>'+data.connectionFailureLabel);
         $("#actionfail").width("500px") ;
         $("#actionfail").css("left",($( window ).width()/2) - ($("#actionfail").width()/2));
         $("#actionfail").css("position","absolute");
         $("#actionfail").show().delay(10000).fadeOut();
     }
 
+
+    });
+}
+function searchUsers() {
+var ldapUBaseDN = $("#ldapUBaseDN").val();
+var usersFilter = $("#usersFilter").val();
+var usersSearch  = $("#usersSearch").val();
+    $('#ldapSettings').jzAjax({
+        url: "LdapController.searchUsers()" ,
+        data: {"ldapUBaseDN":ldapUBaseDN,"usersFilter":usersFilter,"usersSearch":usersSearch}
+    }).done(function(data) {
 
     });
 }

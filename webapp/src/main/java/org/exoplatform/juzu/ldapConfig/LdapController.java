@@ -13,17 +13,17 @@ import org.exoplatform.ldap.services.LdapConfigService;
 import org.exoplatform.ldap.utils.CoreUtils;
 import org.exoplatform.ldap.utils.LdapConfigConverter;
 import org.exoplatform.ldap.utils.LdapParameters;
+import org.exoplatform.portal.webui.util.Util;
 
 import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.naming.NamingException;
+import javax.naming.directory.SearchResult;
 import java.io.IOException;
 import java.net.ConnectException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.net.MalformedURLException;
+import java.util.*;
 
 /**
  * Created by nagui on 27/06/14.
@@ -43,6 +43,14 @@ public class LdapController {
     private String usersClasses;
     private String usersSearch;
     private String message;
+    private String groupsId;
+    private String groupsFilter;
+    private String groupsAttr;
+    private String groupsClasses;
+    private String groupsSearch;
+    private String connectionSuccessLabel;
+    private String connectionFailureLabel;
+
 
     @Inject
     LdapConfigService ldapConfigService ;
@@ -57,6 +65,8 @@ public class LdapController {
     @Inject
     @Path("ldap.gtmpl")
     org.exoplatform.juzu.ldapConfig.templates.ldap ldap;
+
+
 
 
     @View
@@ -77,6 +87,11 @@ public class LdapController {
         usersAttr = System.getProperty(ldapParameters.LDAP_CONF_USERS_MAPPING);
         usersClasses = System.getProperty(ldapParameters.LDAP_CONF_USERS_CLASSES);
         usersSearch = System.getProperty(ldapParameters.LDAP_CONF_USERS_SEARCH_SCOPE);
+        groupsId = System.getProperty(ldapParameters.LDAP_CONF_USERS_GROUPS_ID);
+        groupsFilter = System.getProperty(ldapParameters.LDAP_CONF_USERS_GROUPS_FILTER);
+        groupsAttr = System.getProperty(ldapParameters.LDAP_CONF_USERS_GROUPS_MAPPING);
+        groupsClasses = System.getProperty(ldapParameters.LDAP_CONF_GROUPS_CLASSES);
+        groupsSearch = System.getProperty(ldapParameters.LDAP_CONF_GROUPS_SEARCH_SCOPE);
 
         parameters.put("ldapTypeLabel", rs.getString("ldap.type.label"));
         parameters.put("ldapUrlLabel", rs.getString("ldap.url.label"));
@@ -87,6 +102,7 @@ public class LdapController {
         parameters.put("resetLabel", rs.getString("ldap.reset.label"));
         parameters.put("testLabel", rs.getString("ldap.test.label"));
         parameters.put("saveLabel", rs.getString("ldap.save.label"));
+        parameters.put("searchLabel", rs.getString("ldap.search.label"));
         parameters.put("ldapUBaseLabel", rs.getString("ldap.users.base.label"));
         parameters.put("ldapUsersLabel", rs.getString("ldap.users.id.label"));
         parameters.put("ldapUsersFilterLabel", rs.getString("ldap.users.filter.label"));
@@ -95,6 +111,14 @@ public class LdapController {
         parameters.put("ldapUsersSearchLabel", rs.getString("ldap.users.search.label"));
         parameters.put("ldapDescriptionLabel", rs.getString("ldap.description.label"));
         parameters.put("ldapAuthenticationLabel", rs.getString("ldap.authentications.label"));
+        parameters.put("ldapSettingsLabel", rs.getString("ldap.settings.label"));
+        parameters.put("ldapGroupsLabel", rs.getString("ldap.groups.id.label"));
+        parameters.put("ldapGroupsFilterLabel", rs.getString("ldap.groups.filter.label"));
+        parameters.put("ldapGroupsAttrLabel", rs.getString("ldap.groups.attribute.label"));
+        parameters.put("ldapGroupsClsLabel", rs.getString("ldap.groups.classes.label"));
+        parameters.put("ldapGroupsSearchLabel", rs.getString("ldap.groups.search.label"));
+        parameters.put(connectionSuccessLabel, rs.getString("ldap.connection.success.label"));
+        parameters.put(connectionFailureLabel, rs.getString("ldap.connection.failure.label"));
 
         parameters.put("ldapUrl", ldapUrl);
         parameters.put("ldapType", ldapType);
@@ -108,6 +132,11 @@ public class LdapController {
         parameters.put("usersAttr", usersAttr);
         parameters.put("usersClasses", usersClasses);
         parameters.put("usersSearch", usersSearch);
+        parameters.put("groupsId", groupsId);
+        parameters.put("groupsFilter", groupsFilter);
+        parameters.put("groupsAttr", groupsAttr);
+        parameters.put("groupsClasses", groupsClasses);
+        parameters.put("groupsSearch", groupsSearch);
         return index.with(parameters).ok();
 
     }
@@ -131,28 +160,29 @@ public class LdapController {
     @Ajax
     @Resource
     public Response.Content<Stream.Char> checkConnection(String ldapUrl,String ldapAdminDN,String ldapAdminPwd,String ldapAuthType) throws Exception {
-        Map<String, String> paramaters = new HashMap<String, String>();
-        paramaters.put("ldapUrl",ldapUrl);
-        paramaters.put("ldapAdminDN",ldapAdminDN);
-        paramaters.put("ldapAdminPwd",ldapAdminPwd);
-        paramaters.put("ldapAuthType",ldapAuthType);
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("ldapUrl", ldapUrl);
+        parameters.put("ldapAdminDN",ldapAdminDN);
+        parameters.put("ldapAdminPwd",ldapAdminPwd);
+        parameters.put("ldapAuthType",ldapAuthType);
+
+        try{
             ldapAuthenticationService.checkLdapAuthentication(ldapUrl,ldapAdminDN,ldapAdminPwd,ldapAuthType);
-            if(ldapAuthenticationService.isConnected()){
-                paramaters.put("message","ok");
-            }
-        else{
-                paramaters.put("message","ko");
-            }
-
-        return createJSON(paramaters);
+            parameters.put("message","ok");
+            parameters.put("connectionSuccessLabel",connectionSuccessLabel);
+        }
+        catch (Exception e){
+            parameters.put("connectionFailureLabel",connectionFailureLabel);
+        }
 
 
 
+        return createJSON(parameters);
     }
     @Ajax
     @Resource
     public Response.Content<Stream.Char> resetSettings() {
-        Map<String, String> paramaters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<String, String>();
         ldapUrl=System.getProperty(ldapParameters.LDAP_CONF_URL) ;
         ldapType=System.getProperty(ldapParameters.LDAP_CONF_TYPE) ;
         ldapAdminDN=System.getProperty(ldapParameters.LDAP_CONF_ADMIN_DN);
@@ -160,14 +190,30 @@ public class LdapController {
         ldapAuthType=System.getProperty(ldapParameters.LDAP_CONF_AUTH_TYPE) ;
         ldapUBaseDN=System.getProperty(ldapParameters.LDAP_CONF_USERS_BASE_DN) ;
         ldapGBaseDN=System.getProperty(ldapParameters.LDAP_CONF_GROUPS_BASE_DN) ;
-        paramaters.put("ldapUrl",ldapUrl);
-        paramaters.put("ldapType",ldapType);
-        paramaters.put("ldapAdminDN",ldapAdminDN);
-        paramaters.put("ldapAdminPwd",ldapAdminPwd);
-        paramaters.put("ldapAuthType",ldapAuthType);
-        paramaters.put("ldapUBaseDN",ldapUBaseDN);
-        paramaters.put("ldapGBaseDN",ldapGBaseDN);
-        return createJSON(paramaters);
+        parameters.put("ldapUrl",ldapUrl);
+        parameters.put("ldapType",ldapType);
+        parameters.put("ldapAdminDN",ldapAdminDN);
+        parameters.put("ldapAdminPwd",ldapAdminPwd);
+        parameters.put("ldapAuthType",ldapAuthType);
+        parameters.put("ldapUBaseDN",ldapUBaseDN);
+        parameters.put("ldapGBaseDN",ldapGBaseDN);
+        return createJSON(parameters);
+    }
+    @Ajax
+    @Resource
+    public Response.Content<Stream.Char> searchUsers(String ldapUBaseDN, String usersFilter,String usersSearch)throws NamingException{
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("ldapUBaseDN",ldapUBaseDN) ;
+        parameters.put("usersFilter",usersFilter) ;
+        parameters.put("usersSearch",usersSearch) ;
+        ArrayList<SearchResult> list;
+        list = ldapAuthenticationService.getResultByCustomFilter(ldapUBaseDN, usersFilter,usersSearch);
+        LOG.info("number of users"+ list.size());
+
+        LOG.info("Users sample");
+        parameters.put("list",list.toString()) ;
+        return createJSON(parameters);
+
     }
 
     /**

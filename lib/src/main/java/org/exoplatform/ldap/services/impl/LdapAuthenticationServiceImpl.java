@@ -1,6 +1,7 @@
 package org.exoplatform.ldap.services.impl;
 
 import org.exoplatform.ldap.services.LdapAuthenticationService;
+import org.exoplatform.ldap.utils.LDAPAuthenticationException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -13,7 +14,9 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.jar.Attributes;
 
 /**
  * Created by nagui on 09/03/15.
@@ -23,10 +26,11 @@ public class LdapAuthenticationServiceImpl implements LdapAuthenticationService 
     private String ldapContext="com.sun.jndi.ldap.LdapCtxFactory";
     private boolean connected;
     private InitialDirContext connection;
+    Hashtable<String, String> env = new Hashtable<String, String>();
     @Override
-    public void checkLdapAuthentication(String ldapUrl,String ldapAdmin,String ldapPassword,String authType)throws Exception {
+    public void checkLdapAuthentication(String ldapUrl,String ldapAdmin,String ldapPassword,String authType)throws LDAPAuthenticationException {
 
-        Hashtable<String, String> env = new Hashtable<String, String>();
+
 
         env.put(Context.INITIAL_CONTEXT_FACTORY, ldapContext);
         if(ldapUrl!=null){
@@ -46,22 +50,31 @@ public class LdapAuthenticationServiceImpl implements LdapAuthenticationService 
         try {
             connection = new InitialDirContext(env);
             connected = true;
-            connection.close();
+            //connection.close();
             LOG.info("Connection Success");
 
         } catch (Exception namEx) {
-            LOG.info("Connection failure",namEx);
-            connected=false;
+            throw new LDAPAuthenticationException ();
         }
 
     }
 
     @Override
-    public ArrayList<SearchResult> getResultByCustomFilter(String ldapAdmin,String searchFilter) throws NamingException {
+    public ArrayList<SearchResult> getResultByCustomFilter(String ldapUBaseDN,String searchFilter,String searchScope) throws NamingException {
         SearchControls searchControls = new SearchControls();
-        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        if(searchScope.equals("subTree")){
+            searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-        NamingEnumeration<SearchResult> results = connection.search(ldapAdmin, searchFilter, searchControls);
+        }
+        else if(searchScope.equals("oneLevel")){
+            searchControls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+
+        }
+        else
+            searchControls.setSearchScope(SearchControls.OBJECT_SCOPE);
+
+        connection = new InitialDirContext(env);
+        NamingEnumeration<SearchResult> results = connection.search(ldapUBaseDN, searchFilter, searchControls);
 
         if (results.hasMoreElements()) {
             ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
@@ -69,6 +82,7 @@ public class LdapAuthenticationServiceImpl implements LdapAuthenticationService 
                 searchResults.add(results.next());
             }
             return searchResults;
+
 
         }
         return null;
