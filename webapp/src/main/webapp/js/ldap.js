@@ -171,7 +171,11 @@ var searchScope=$("#searchScope").val() ;
 
     $('#ldapSettings').jzAjax({
         url: "LdapController.createLdapConfig()" ,
-        data: {"ldapType":ldapType,"ldapUrl":ldapUrl,"ldapAdminDN":ldapAdminDN,"ldapAuthType":ldapAuthType,"ldapUBaseDN":ldapUBaseDN}
+        data: {"ldapType":ldapType,"ldapUrl":ldapUrl,"ldapAdminDN":ldapAdminDN,"ldapAuthType":ldapAuthType,"ldapUBaseDN":ldapUBaseDN,"usersFilter":usersFilter,
+               "usersMapping":usersMapping,"usersClasses":usersClasses,"usersSearchScope":usersSearchScope,"groupsId":groupsId,"groupsFilter":groupsFilter,
+               "groupsMapping":groupsMapping,"groupsClasses":groupsClasses,"groupsSearchScope":groupsSearchScope,"connPool":connPool,"connPoolMax":connPoolMax,
+               "connPoolTimeout":connPoolTimeout,"connPoolProtocol":connPoolProtocol,"ldapReadOnly":ldapReadOnly,"ldapInsensitive":ldapInsensitive,
+               "searchLimit":searchLimit,"searchScope":searchScope}
     }).done(function(data) {
      if(data.message=="ok") {
                 $("#actionsuccess").html('<i class="uiIconSuccess"></i>'+"LDAP parameters saved successfully");
