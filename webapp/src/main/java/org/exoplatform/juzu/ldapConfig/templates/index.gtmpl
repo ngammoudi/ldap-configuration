@@ -7,14 +7,17 @@
 #{param name=ldapGBaseDN/}
 #{param name=usersId/}
 #{param name=usersFilter/}
-#{param name=usersAttr/}
+#{param name=usersMapping/}
 #{param name=usersClasses/}
-#{param name=usersSearch/}
+#{param name=usersSearchScope/}
 #{param name=groupsId/}
 #{param name=groupsFilter/}
-#{param name=groupsAttr/}
+#{param name=groupsMapping/}
 #{param name=groupsClasses/}
-#{param name=groupsSearch/}
+#{param name=groupsSearchScope/}
+#{param name=connPoolMax/}
+#{param name=connPoolTimeout/}
+#{param name=searchLimit/}
 #{param name=message/}
 #{param name=connectionSuccessLabel/}
 #{param name=connectionFailureLabel/}
@@ -22,11 +25,7 @@
 <html>  
 <head>
      <script>
-       $(function() {
-         $( "#accordion" ).accordion({
-                                      collapsible: true,
-                                      autoHeight: false
-                    });
+       $(function() {;
          $("#actionfail").hide();
          $("#actionsuccess").hide();
        });
@@ -61,8 +60,8 @@
     <div class="alert alert-error" id="actionfail"></div>
 </div>
 <div id="accordion">
-  	<h5>Connection</h5>
- 		<div id="ldapConfig" class="ldapConnection">
+  	<h5>${connectionLabel}</h5>
+ 		<div id="ldapConfig">
         	<form id="ldapForm" action="@{checkConnection()}" method="post" class="form-horizontal">
             	<div class="table">
                     <div class="table-row">
@@ -136,23 +135,45 @@
                     </div>
                     <div class="col">
                             <select id="ldapAuthType" name="ldapAuthType" class="input-lg select-group form-control" value="${ldapAuthType}" disabled="true">
-                                <option selected class="authTypePlaceholder">Simple</option>
-                                <option selected class="authTypePlaceholder">DIGEST-MD5</option>
+                                <option selected >Simple</option>
+                                <option selected ">DIGEST-MD5</option>
                             </select>
                     </div>
                 </div>
 
                 <div class="table-row">
                     <div class="col">
-                           <label class="checkbox" for="groupDNLabel">
-                           <input id="groupDNLabel" name="groupDNLabel" type="checkbox" class="input_control" value="ldapGBaseDN"/>${ldapGBaseLabel}
+                           <label class="checkbox" for="connPoolLabel">
+                           <input id="connPoolLabel" name="connPoolLabel" type="checkbox" class="input_control" value="connPoolMax"/>${connPoolMaxLabel}
                            </label>
                     </div>
                     <div class="col">
-                           <input id="ldapGBaseDN" name="ldapGBaseDN" placeholder="group base DN" type="text" value="${ldapGBaseDN}" disabled="true"/>
+                           <input id="connPoolMax" name="connPoolMax" type="text" value="${connPoolMax}" disabled="true"/>
                     </div>
                 </div>
-                    
+
+                <div class="table-row">
+                    <div class="col">
+                           <label class="checkbox" for="connPoolTimeLabel">
+                           <input id="connPoolTimeLabel" name="connPoolTimeLabel" type="checkbox" class="input_control" value="connPoolTimeout"/>${connPoolTimeoutLabel}
+                           </label>
+                    </div>
+                    <div class="col">
+                           <input id="connPoolTimeout" name="connPoolTimeout" type="text" value="${connPoolTimeout}" disabled="true"/>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="col">
+                           <label class="checkbox" for="searchLimitLabel">
+                           <input id="searchLimitLabel" name="searchLimitLabel" type="checkbox" class="input_control" value="searchLimit"/>${ldapSearchLimitLabel}
+                           </label>
+                    </div>
+                    <div class="col">
+                           <input id="searchLimit" name="searchLimit" type="text" value="${searchLimit}" disabled="true"/>
+                    </div>
+                </div>
+
 
                     <!-- Button -->
                         <div class="control-group">
@@ -163,8 +184,8 @@
                         </div>
             </div>
         </form>
-    </div> 
-<h5>Users</h5>
+    </div>
+<h5>${usersLabel}</h5>
     <div id=userForm>
         <div class="table">
             <div class="table-row">
@@ -174,7 +195,7 @@
                      </label>
               </div>
               <div class="col">
-                    <input id="ldapUBaseDN" name="ldapUBaseDN" placeholder="user base DN" type="text" value="${ldapUBaseDN}" disabled="true"/>
+                    <input id="ldapUBaseDN" name="ldapUBaseDN" type="text" value="${ldapUBaseDN}" disabled="true"/>
               </div>
             </div>
             <div class="table-row">
@@ -184,7 +205,7 @@
                      </label>
               </div>
               <div class="col">
-                    <input id="usersId" name="usersId" placeholder="user base DN" type="text" value="${usersId}" disabled="true"/>
+                    <input id="usersId" name="usersId" type="text" value="${usersId}" disabled="true"/>
               </div>
             </div>
             <div class="table-row">
@@ -194,17 +215,17 @@
                      </label>
                 </div>
                 <div class="col">
-                    <input id="usersFilter" name="usersFilter" placeholder="user base DN" type="text" value="${usersFilter}" disabled="true"/>
+                    <input id="usersFilter" name="usersFilter" type="text" value="${usersFilter}" disabled="true"/>
                 </div>
             </div>
             <div class="table-row">
                 <div class="col">
                      <label class="checkbox" for="usersAttLabel">
-                     <input id="usersAttLabel" name="usersAttLabel" type="checkbox" class="input_control" value="usersAttr"/>${ldapUsersAttrLabel}
+                     <input id="usersAttLabel" name="usersAttLabel" type="checkbox" class="input_control" value="usersMapping"/>${ldapUsersAttrLabel}
                      </label>
                 </div>
                 <div class="col">
-                    <input id="usersAttr" name="usersAttr" placeholder="user base DN" type="text" value="${usersAttr}" disabled="true"/>
+                    <input id="usersMapping" name="usersMapping" type="text" value="${usersMapping}" disabled="true"/>
                 </div>
             </div>
             <div class="table-row">
@@ -214,18 +235,18 @@
                      </label>
                 </div>
                 <div class="col">
-                    <input id="usersClasses" name="usersClasses" placeholder="user base DN" type="text" value="${usersClasses}" disabled="true"/>
+                    <input id="usersClasses" name="usersClasses" type="text" value="${usersClasses}" disabled="true"/>
                 </div>
             </div>
             <div class="table-row">
                 <div class="col">
                     <label class="checkbox" for="usersSearchLabel">
-                    <input id="usersSearchLabel" name="usersSearchLabel" type="checkbox" class="input_control" value="usersSearch"/>${ldapUsersSearchLabel}
+                    <input id="usersSearchLabel" name="usersSearchLabel" type="checkbox" class="input_control" value="usersSearchScope"/>${ldapUsersSearchLabel}
                     </label>
                 </div>
                 <div class="col">
-                    <select id="usersSearch" name="usersSearch" class="input-lg select-group form-control" value="${usersSearch}" disabled="true">
-                        <option selected class="usersSearchPlaceholder">subTree</option>
+                    <select id="usersSearchScope" name="usersSearchScope" value="${usersSearchScope}" disabled="true">
+                        <option selected >subTree</option>
                     </select>
                 </div>
             </div>
@@ -238,8 +259,8 @@
                  </div>
 
         </div>
-    </div>  
-<h5>Groups</h5>
+    </div>
+<h5>${groupsLabel}</h5>
     <div id=groupsForm>
       <div class="table">
         <div class="table-row">
@@ -249,7 +270,7 @@
                            </label>
                     </div>
                     <div class="col">
-                           <input id="ldapGBaseDN" name="ldapGBaseDN" placeholder="group base DN" type="text" value="${ldapGBaseDN}" disabled="true"/>
+                           <input id="ldapGBaseDN" name="ldapGBaseDN" type="text" value="${ldapGBaseDN}" disabled="true"/>
                     </div>
           </div>
           <div class="table-row">
@@ -259,7 +280,7 @@
                      </label>
               </div>
               <div class="col">
-                    <input id="groupsId" name="groupsId" placeholder="group base DN" type="text" value="${groupsId}" disabled="true"/>
+                    <input id="groupsId" name="groupsId" type="text" value="${groupsId}" disabled="true"/>
               </div>
             </div>
             <div class="table-row">
@@ -269,17 +290,17 @@
                      </label>
                 </div>
                 <div class="col">
-                    <input id="groupsFilter" name="groupsFilter" placeholder="user base DN" type="text" value="${groupsFilter}" disabled="true"/>
+                    <input id="groupsFilter" name="groupsFilter" type="text" value="${groupsFilter}" disabled="true"/>
                 </div>
             </div>
             <div class="table-row">
                 <div class="col">
                      <label class="checkbox" for="groupsAttLabel">
-                     <input id="groupsAttLabel" name="groupsAttLabel" type="checkbox" class="input_control" value="groupsAttr"/>${ldapGroupsAttrLabel}
+                     <input id="groupsAttLabel" name="groupsAttLabel" type="checkbox" class="input_control" value="groupsMapping"/>${ldapGroupsAttrLabel}
                      </label>
                 </div>
                 <div class="col">
-                    <input id="groupsAttr" name="groupsAttr" placeholder="user base DN" type="text" value="${groupsAttr}" disabled="true"/>
+                    <input id="groupsMapping" name="groupsMapping" type="text" value="${groupsMapping}" disabled="true"/>
                 </div>
             </div>
             <div class="table-row">
@@ -289,18 +310,18 @@
                      </label>
                 </div>
                 <div class="col">
-                    <input id="groupsClasses" name="groupsClasses" placeholder="user base DN" type="text" value="${groupsClasses}" disabled="true"/>
+                    <input id="groupsClasses" name="groupsClasses" type="text" value="${groupsClasses}" disabled="true"/>
                 </div>
             </div>
             <div class="table-row">
                 <div class="col">
                     <label class="checkbox" for="groupsSearchLabel">
-                    <input id="groupsSearchLabel" name="groupsSearchLabel" type="checkbox" class="input_control" value="groupsSearch"/>${ldapGroupsSearchLabel}
+                    <input id="groupsSearchLabel" name="groupsSearchLabel" type="checkbox" class="input_control" value="groupsSearchScope"/>${ldapGroupsSearchLabel}
                     </label>
                 </div>
                 <div class="col">
-                    <select id="groupsSearch" name="groupsSearch" class="input-lg select-group form-control" value="${groupsSearch}" disabled="true">
-                        <option selected class="groupsSearchPlaceholder">subTree</option>
+                    <select id="groupsSearchScope" name="groupsSearchScope" value="${groupsSearchScope}" disabled="true">
+                        <option selected >subTree</option>
                     </select>
                 </div>
             </div>
@@ -308,11 +329,12 @@
             <div class="control-group">
                  <label class="control-label" for="createLdapConfig"></label>
                     <div class="controls">
-                        <button id="createLdapConfig" name="createLdapConfig" class="btn btn-primary" type="submit">${saveLabel}</button>
+                        <input type="button" class="btn btn-primary" value="${searchLabel}" onclick="searchGroups();" />
+                        <input type="button" class="btn btn-primary" value="${saveLabel}" onclick="createLdapConfig();"/>
                     </div>
             </div>
-      </div>       
-                 
+      </div>
+
 </div>
 </body>  
 </html>  

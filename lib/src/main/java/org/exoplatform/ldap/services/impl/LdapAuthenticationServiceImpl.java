@@ -9,14 +9,12 @@ import javax.naming.CommunicationException;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
+import javax.naming.directory.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.jar.Attributes;
+import java.util.List;
+import javax.naming.directory.Attributes;
 
 /**
  * Created by nagui on 09/03/15.
@@ -60,7 +58,47 @@ public class LdapAuthenticationServiceImpl implements LdapAuthenticationService 
     }
 
     @Override
-    public ArrayList<SearchResult> getResultByCustomFilter(String ldapUBaseDN,String searchFilter,String searchScope) throws NamingException {
+    public List<String> searchUsers(String ldapUBaseDN, String searchFilter, String searchScope, String usersId) throws NamingException {
+        SearchControls searchControls = new SearchControls();
+        List<String> attributes=new ArrayList<String>();
+        if(searchScope.equals("subTree")){
+            searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+        }
+        else if(searchScope.equals("oneLevel")){
+            searchControls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+
+        }
+        else
+            searchControls.setSearchScope(SearchControls.OBJECT_SCOPE);
+
+
+        connection = new InitialDirContext(env);
+        NamingEnumeration<SearchResult> results = connection.search(ldapUBaseDN, searchFilter, searchControls);
+
+        while (results != null && results.hasMore()) {
+            SearchResult entry = (SearchResult) results.next(); // Read the entry
+
+            Attributes attrs = entry.getAttributes();
+            if (attrs != null) {
+                //Loop through all attributes
+                for (NamingEnumeration<? extends Attribute> attEnum = attrs.getAll(); attEnum.hasMoreElements();) {
+                    Attribute attr = (Attribute) attEnum.next();
+                    String attrId = attr.getID();
+                    if (attrId.equals(usersId)) { // If the attribute is equal to the one we are looking for
+                        Enumeration<?> vals = attr.getAll();
+                        vals.hasMoreElements();
+                        attributes.add(vals.nextElement().toString()) ;
+
+                    }
+                }
+            }
+        }
+        return attributes;
+    }
+
+    @Override
+    public ArrayList<SearchResult> searchGroups(String groupBaseDN, String groupsFilter, String searchScope, String groupsId) throws NamingException {
         SearchControls searchControls = new SearchControls();
         if(searchScope.equals("subTree")){
             searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -74,7 +112,7 @@ public class LdapAuthenticationServiceImpl implements LdapAuthenticationService 
             searchControls.setSearchScope(SearchControls.OBJECT_SCOPE);
 
         connection = new InitialDirContext(env);
-        NamingEnumeration<SearchResult> results = connection.search(ldapUBaseDN, searchFilter, searchControls);
+        NamingEnumeration<SearchResult> results = connection.search(groupBaseDN, groupsFilter, searchControls);
 
         if (results.hasMoreElements()) {
             ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
@@ -82,7 +120,6 @@ public class LdapAuthenticationServiceImpl implements LdapAuthenticationService 
                 searchResults.add(results.next());
             }
             return searchResults;
-
 
         }
         return null;

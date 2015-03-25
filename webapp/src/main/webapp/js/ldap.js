@@ -81,14 +81,13 @@ var ldapAuthType = $("#ldapAuthType").val();
     if(data.message=="ok") {
         $("#actionsuccess").html('<i class="uiIconSuccess"></i>'+data.connectionSuccessLabel);
         $("#actionsuccess").width("600px")   ;
-         $("#actionsuccess").css("left",($( window ).width()/2) - ($("#actionsuccess").width()/2));
+        $("#actionsuccess").css("left",($( window ).width()/2) - ($("#actionsuccess").width()/2));
         $("#actionsuccess").show().delay(10000).fadeOut();
     }
     else{
-        $("#actionfail").html('<i class="uiIconError" style="align:right"></i>'+data.connectionFailureLabel);
-        $("#actionfail").width("500px") ;
+        $("#actionfail").html('<i class="uiIconError"></i>'+data.connectionFailureLabel);
+        $("#actionfail").width("600px") ;
         $("#actionfail").css("left",($( window ).width()/2) - ($("#actionfail").width()/2));
-        $("#actionfail").css("position","absolute");
         $("#actionfail").show().delay(10000).fadeOut();
     }
 
@@ -99,10 +98,98 @@ function searchUsers() {
 var ldapUBaseDN = $("#ldapUBaseDN").val();
 var usersFilter = $("#usersFilter").val();
 var usersSearch  = $("#usersSearch").val();
+var usersId= $("#usersId").val();
     $('#ldapSettings').jzAjax({
         url: "LdapController.searchUsers()" ,
-        data: {"ldapUBaseDN":ldapUBaseDN,"usersFilter":usersFilter,"usersSearch":usersSearch}
+        data: {"ldapUBaseDN":ldapUBaseDN,"usersFilter":usersFilter,"usersSearch":usersSearch,"usersId":usersId}
     }).done(function(data) {
+     if(data.message=="ok") {
+                $("#actionsuccess").html('<i class="uiIconSuccess"></i>'+data.searchResults+"users found --- Users sample:"+'</br>'+data.users);
+                $("#actionsuccess").width("600px") ;
+                $("#actionsuccess").css("left",($( window ).width()/2) - ($("#actionsuccess").width()/2));
+                $("#actionsuccess").show().delay(10000).fadeOut();
+            }
+     else  {
+                $("#actionfail").html('<i class="uiIconError"></i>'+"Failed fetching users:"+data.ldapUBaseDN);
+                $("#actionfail").width("600px");
+                $("#actionfail").css("left",($( window ).width()/2) - ($("#actionfail").width()/2));
+                $("#actionfail").show().delay(10000).fadeOut();
+           }
 
     });
 }
+
+function searchGroups() {
+var ldapGBaseDN = $("#ldapGBaseDN").val();
+var groupsFilter = $("#groupsFilter").val();
+var groupsSearch  = $("#groupsSearch").val();
+var groupsId= $("#groupsId").val();
+    $('#ldapSettings').jzAjax({
+        url: "LdapController.searchGroups()" ,
+        data: {"ldapGBaseDN":ldapGBaseDN,"groupsFilter":groupsFilter,"groupsSearch":groupsSearch,"groupsId":groupsId}
+    }).done(function(data) {
+     if(data.message=="ok") {
+                $("#actionsuccess").html('<i class="uiIconSuccess"></i>'+data.searchResults+"groups found --- Groups sample:"+'</br>'+data.groups);
+                $("#actionsuccess").width("600px") ;
+                $("#actionsuccess").css("left",($( window ).width()/2) - ($("#actionsuccess").width()/2));
+                $("#actionsuccess").show().delay(10000).fadeOut();
+            }
+     else  {
+                $("#actionfail").html('<i class="uiIconError"></i>'+"Failed fetching groups:"+data.ldapGBaseDN);
+                $("#actionfail").width("600px");
+                $("#actionfail").css("left",($( window ).width()/2) - ($("#actionfail").width()/2));
+                $("#actionfail").show().delay(10000).fadeOut();
+           }
+
+    });
+}
+function createLdapConfig() {
+var ldapType = $("#ldapType").val();
+var ldapUrl = $("#ldapUrl").val();
+var ldapAdminDN  = $("#ldapAdminDN").val();
+var ldapAuthType= $("#ldapAuthType").val();
+var ldapUBaseDN= $("#ldapUBaseDN").val();
+var ldapGBaseDN=$("#ldapGBaseDN").val();
+var usersId=$("#usersId").val();
+var usersFilter=$("#usersFilter").val();
+var usersMapping=$("#usersMapping").val();
+var usersClasses=$("#usersClasses").val();
+var usersSearchScope=$("#usersSearchScope").val();
+var groupsId=$("#groupsId").val();
+var groupsFilter=$("#groupsFilter").val();
+var groupsMapping=$("#groupsMapping").val();
+var groupsClasses=$("#groupsClasses").val();
+var groupsSearchScope=$("#groupsSearchScope").val();
+var connPool=$("#connPool").val();
+var connPoolMax=$("#connPoolMax").val();
+var connPoolTimeout=$("#connPoolTimeout").val();
+var connPoolProtocol=$("#connPoolProtocol").val();
+var ldapReadOnly=$("#ldapReadOnly").val() ;
+var ldapInsensitive=$("#ldapInsensitive").val() ;
+var searchLimit=$("#searchLimit").val() ;
+var searchScope=$("#searchScope").val() ;
+
+    $('#ldapSettings').jzAjax({
+        url: "LdapController.createLdapConfig()" ,
+        data: {"ldapType":ldapType,"ldapUrl":ldapUrl,"ldapAdminDN":ldapAdminDN,"ldapAuthType":ldapAuthType,"ldapUBaseDN":ldapUBaseDN}
+    }).done(function(data) {
+     if(data.message=="ok") {
+                $("#actionsuccess").html('<i class="uiIconSuccess"></i>'+"LDAP parameters saved successfully");
+                $("#actionsuccess").width("600px") ;
+                $("#actionsuccess").css("left",($( window ).width()/2) - ($("#actionsuccess").width()/2));
+                $("#actionsuccess").show().delay(10000).fadeOut();
+            }
+     else  {
+                $("#actionfail").html('<i class="uiIconError"></i>'+"Failed to save LDAP parameters");
+                $("#actionfail").width("600px");
+                $("#actionfail").css("left",($( window ).width()/2) - ($("#actionfail").width()/2));
+                $("#actionfail").show().delay(10000).fadeOut();
+           }
+
+    });
+}
+$(document).ready(function() {
+    $("#accordion").accordion({
+        autoHeight: false
+     });
+});

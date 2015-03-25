@@ -42,7 +42,7 @@
                 <valueConstraints />
             </propertyDefinition>
 
-            <propertyDefinition name="exo:ldapSearchLinmit" requiredType="Integer" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+            <propertyDefinition name="exo:ldapSearchLimit" requiredType="Integer" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
                 <valueConstraints />
             </propertyDefinition>
 
@@ -70,7 +70,7 @@
                 <valueConstraints />
             </propertyDefinition>
 
-            <propertyDefinition name="exo:ldapScope" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+            <propertyDefinition name="exo:usersSearchScope" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
                 <valueConstraints />
             </propertyDefinition>
 
@@ -86,7 +86,7 @@
                 <valueConstraints />
             </propertyDefinition>
 
-            <propertyDefinition name="exo:ldapGroupsMap" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+            <propertyDefinition name="exo:ldapGroupsMapping" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
                 <valueConstraints />
             </propertyDefinition>
 
@@ -94,11 +94,11 @@
                 <valueConstraints />
             </propertyDefinition>
 
-            <propertyDefinition name="exo:ldapGroupScope" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+            <propertyDefinition name="exo:groupsSearchScope" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
                 <valueConstraints />
             </propertyDefinition>
 
-            <propertyDefinition name="exo:ldapfileConfig" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+            <propertyDefinition name="exo:ldapFileConfig" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
                 <valueConstraints />
             </propertyDefinition>
 

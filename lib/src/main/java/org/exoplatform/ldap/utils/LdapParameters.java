@@ -18,13 +18,13 @@ public class LdapParameters {
     public static final String LDAP_CONF_SEARCH_LIMIT="exo.ldap.search.timelimit";
     public static final String LDAP_CONF_SEARCH_CASE_INSENSITIVE="exo.ldap.search.case.insensitive";
     public static final String LDAP_CONF_USERS_BASE_DN="exo.ldap.users.base.dn";
-    public static final String LDAP_CONF_USERS_ID="exo.ldap.users.id ";
+    public static final String LDAP_CONF_USERS_ID="exo.ldap.users.id";
     public static final String LDAP_CONF_USERS_FILTER="exo.ldap.users.filter";
     public static final String LDAP_CONF_USERS_MAPPING="exo.ldap.users.mapping";
     public static final String LDAP_CONF_USERS_CLASSES="exo.ldap.users.classes";
     public static final String LDAP_CONF_USERS_SEARCH_SCOPE="exo.ldap.users.search.scope";
     public static final String LDAP_CONF_GROUPS_BASE_DN="exo.ldap.groups.base.dn";
-    public static final String LDAP_CONF_USERS_GROUPS_ID="exo.ldap.users.groups.id ";
+    public static final String LDAP_CONF_USERS_GROUPS_ID="exo.ldap.users.groups.id";
     public static final String LDAP_CONF_USERS_GROUPS_FILTER="exo.ldap.users.groups.filter";
     public static final String LDAP_CONF_USERS_GROUPS_MAPPING="exo.ldap.users.groups.mapping";
     public static final String LDAP_CONF_GROUPS_CLASSES="exo.ldap.groups.classes";

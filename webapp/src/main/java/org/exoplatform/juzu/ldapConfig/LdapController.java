@@ -4,25 +4,16 @@ import juzu.*;
 import juzu.io.Stream;
 import juzu.plugin.ajax.Ajax;
 import juzu.request.RenderContext;
-import juzu.template.Template;
 import org.apache.log4j.Logger;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.ldap.model.LdapConfigBean;
 import org.exoplatform.ldap.services.LdapAuthenticationService;
 import org.exoplatform.ldap.services.LdapConfigService;
-import org.exoplatform.ldap.utils.CoreUtils;
-import org.exoplatform.ldap.utils.LdapConfigConverter;
 import org.exoplatform.ldap.utils.LdapParameters;
-import org.exoplatform.portal.webui.util.Util;
 
 import javax.inject.Inject;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.naming.NamingException;
 import javax.naming.directory.SearchResult;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.MalformedURLException;
 import java.util.*;
 
 /**
@@ -39,33 +30,30 @@ public class LdapController {
     private String ldapGBaseDN;
     private String usersId;
     private String usersFilter;
-    private String usersAttr;
+    private String usersMapping;
     private String usersClasses;
-    private String usersSearch;
-    private String message;
+    private String usersSearchScope;
     private String groupsId;
     private String groupsFilter;
-    private String groupsAttr;
+    private String groupsMapping;
     private String groupsClasses;
-    private String groupsSearch;
+    private String groupsSearchScope;
+    private String connPoolMax;
+    private String connPoolTimeout;
+    private String searchLimit;
+    private String message;
     private String connectionSuccessLabel;
     private String connectionFailureLabel;
 
 
     @Inject
     LdapConfigService ldapConfigService ;
-    @Inject
-    LdapParameters ldapParameters;
+
     @Inject
     LdapAuthenticationService ldapAuthenticationService;
     @Inject
     @Path("index.gtmpl")
     org.exoplatform.juzu.ldapConfig.templates.index index;
-
-    @Inject
-    @Path("ldap.gtmpl")
-    org.exoplatform.juzu.ldapConfig.templates.ldap ldap;
-
 
 
 
@@ -73,26 +61,37 @@ public class LdapController {
     public Response.Content index(RenderContext renderContext) throws IOException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         ResourceBundle rs = renderContext.getApplicationContext().resolveBundle(renderContext.getUserContext().getLocale());
+        loadDefaultSettings();
+        loadResourceBundle(parameters, rs);
+        setDefaultSettings(parameters);
+        return index.with(parameters).ok();
 
-        // load default values from configuration.properties.
-        ldapUrl = System.getProperty(ldapParameters.LDAP_CONF_URL);
-        ldapType = System.getProperty(ldapParameters.LDAP_CONF_TYPE);
-        ldapAdminDN = System.getProperty(ldapParameters.LDAP_CONF_ADMIN_DN);
-        ldapAdminPwd = System.getProperty(ldapParameters.LDAP_CONF_ADMIN_DN_PWD);
-        ldapAuthType = System.getProperty(ldapParameters.LDAP_CONF_AUTH_TYPE);
-        ldapUBaseDN = System.getProperty(ldapParameters.LDAP_CONF_USERS_BASE_DN);
-        ldapGBaseDN = System.getProperty(ldapParameters.LDAP_CONF_GROUPS_BASE_DN);
-        usersId = System.getProperty(ldapParameters.LDAP_CONF_USERS_ID);
-        usersFilter = System.getProperty(ldapParameters.LDAP_CONF_USERS_FILTER);
-        usersAttr = System.getProperty(ldapParameters.LDAP_CONF_USERS_MAPPING);
-        usersClasses = System.getProperty(ldapParameters.LDAP_CONF_USERS_CLASSES);
-        usersSearch = System.getProperty(ldapParameters.LDAP_CONF_USERS_SEARCH_SCOPE);
-        groupsId = System.getProperty(ldapParameters.LDAP_CONF_USERS_GROUPS_ID);
-        groupsFilter = System.getProperty(ldapParameters.LDAP_CONF_USERS_GROUPS_FILTER);
-        groupsAttr = System.getProperty(ldapParameters.LDAP_CONF_USERS_GROUPS_MAPPING);
-        groupsClasses = System.getProperty(ldapParameters.LDAP_CONF_GROUPS_CLASSES);
-        groupsSearch = System.getProperty(ldapParameters.LDAP_CONF_GROUPS_SEARCH_SCOPE);
+    }
 
+    private void setDefaultSettings(Map<String, Object> parameters) {
+        parameters.put("ldapUrl", ldapUrl);
+        parameters.put("ldapType", ldapType);
+        parameters.put("ldapAdminDN", ldapAdminDN);
+        parameters.put("ldapAdminPwd", ldapAdminPwd);
+        parameters.put("ldapAuthType", ldapAuthType);
+        parameters.put("ldapUBaseDN", ldapUBaseDN);
+        parameters.put("ldapGBaseDN", ldapGBaseDN);
+        parameters.put("usersId", usersId);
+        parameters.put("usersFilter", usersFilter);
+        parameters.put("usersMapping", usersMapping);
+        parameters.put("usersClasses", usersClasses);
+        parameters.put("usersSearchScope", usersSearchScope);
+        parameters.put("groupsId", groupsId);
+        parameters.put("groupsFilter", groupsFilter);
+        parameters.put("groupsMapping", groupsMapping);
+        parameters.put("groupsClasses", groupsClasses);
+        parameters.put("groupsSearchScope", groupsSearchScope);
+        parameters.put("connPoolMax", connPoolMax);
+        parameters.put("connPoolTimeout", connPoolTimeout);
+        parameters.put("searchLimit", searchLimit);
+    }
+
+    private void loadResourceBundle(Map<String, Object> parameters, ResourceBundle rs) {
         parameters.put("ldapTypeLabel", rs.getString("ldap.type.label"));
         parameters.put("ldapUrlLabel", rs.getString("ldap.url.label"));
         parameters.put("ldapAdminDNLabel", rs.getString("ldap.admin.dn.label"));
@@ -117,46 +116,86 @@ public class LdapController {
         parameters.put("ldapGroupsAttrLabel", rs.getString("ldap.groups.attribute.label"));
         parameters.put("ldapGroupsClsLabel", rs.getString("ldap.groups.classes.label"));
         parameters.put("ldapGroupsSearchLabel", rs.getString("ldap.groups.search.label"));
+        parameters.put("connPoolMaxLabel", rs.getString("ldap.pool.max.label"));
+        parameters.put("connPoolTimeoutLabel", rs.getString("ldap.pool.timeout.label"));
+        parameters.put("connPoolProtocolLabel", rs.getString("ldap.pool.protocol.label"));
+        parameters.put("ldapSearchLimitLabel", rs.getString("ldap.search.limit.label"));
+        parameters.put("connectionLabel", rs.getString("ldap.connection.label"));
+        parameters.put("groupsLabel", rs.getString("ldap.groups.label"));
+        parameters.put("usersLabel", rs.getString("ldap.users.label"));
         parameters.put(connectionSuccessLabel, rs.getString("ldap.connection.success.label"));
         parameters.put(connectionFailureLabel, rs.getString("ldap.connection.failure.label"));
-
-        parameters.put("ldapUrl", ldapUrl);
-        parameters.put("ldapType", ldapType);
-        parameters.put("ldapAdminDN", ldapAdminDN);
-        parameters.put("ldapAdminPwd", ldapAdminPwd);
-        parameters.put("ldapAuthType", ldapAuthType);
-        parameters.put("ldapUBaseDN", ldapUBaseDN);
-        parameters.put("ldapGBaseDN", ldapGBaseDN);
-        parameters.put("usersId", usersId);
-        parameters.put("usersFilter", usersFilter);
-        parameters.put("usersAttr", usersAttr);
-        parameters.put("usersClasses", usersClasses);
-        parameters.put("usersSearch", usersSearch);
-        parameters.put("groupsId", groupsId);
-        parameters.put("groupsFilter", groupsFilter);
-        parameters.put("groupsAttr", groupsAttr);
-        parameters.put("groupsClasses", groupsClasses);
-        parameters.put("groupsSearch", groupsSearch);
-        return index.with(parameters).ok();
-
     }
 
-    @View
-    @Route("/ldap/{ldapType}")
-    public Response.Content ldap()
-    {
-
-        return ldap.ok();
-
+    private void loadDefaultSettings() {
+        // load default values from configuration.properties.
+        ldapUrl = System.getProperty(LdapParameters.LDAP_CONF_URL);
+        ldapType = System.getProperty(LdapParameters.LDAP_CONF_TYPE);
+        ldapAdminDN = System.getProperty(LdapParameters.LDAP_CONF_ADMIN_DN);
+        ldapAdminPwd = System.getProperty(LdapParameters.LDAP_CONF_ADMIN_DN_PWD);
+        ldapAuthType = System.getProperty(LdapParameters.LDAP_CONF_AUTH_TYPE);
+        ldapUBaseDN = System.getProperty(LdapParameters.LDAP_CONF_USERS_BASE_DN);
+        ldapGBaseDN = System.getProperty(LdapParameters.LDAP_CONF_GROUPS_BASE_DN);
+        usersId = System.getProperty(LdapParameters.LDAP_CONF_USERS_ID);
+        usersFilter = System.getProperty(LdapParameters.LDAP_CONF_USERS_FILTER);
+        usersMapping = System.getProperty(LdapParameters.LDAP_CONF_USERS_MAPPING);
+        usersClasses = System.getProperty(LdapParameters.LDAP_CONF_USERS_CLASSES);
+        usersSearchScope = System.getProperty(LdapParameters.LDAP_CONF_USERS_SEARCH_SCOPE);
+        groupsId = System.getProperty(LdapParameters.LDAP_CONF_USERS_GROUPS_ID);
+        groupsFilter = System.getProperty(LdapParameters.LDAP_CONF_USERS_GROUPS_FILTER);
+        groupsMapping = System.getProperty(LdapParameters.LDAP_CONF_USERS_GROUPS_MAPPING);
+        groupsClasses = System.getProperty(LdapParameters.LDAP_CONF_GROUPS_CLASSES);
+        groupsSearchScope = System.getProperty(LdapParameters.LDAP_CONF_GROUPS_SEARCH_SCOPE);
+        connPoolMax = System.getProperty(LdapParameters.LDAP_CONF_MAX_POOL);
+        connPoolTimeout= System.getProperty(LdapParameters.LDAP_CONF_POOL_TIMEOUT);
+        searchLimit= System.getProperty(LdapParameters.LDAP_CONF_SEARCH_LIMIT);
     }
-    @Action
-    @Route("/createLdapConfig")
-    public Response.View createLdapConfig(String ldapType,String ldapUrl,String ldapAdminDn,String ldapAuthentication,String ldapUBaseDn) throws Exception {
-            LdapConfigBean ldapConfigBean = new LdapConfigBean(ldapType, ldapUrl, ldapAdminDn, ldapAuthentication, ldapUBaseDn);
+
+    @Ajax
+    @Resource
+    public Response.Content<Stream.Char> createLdapConfig(String ldapType, String ldapUrl, String ldapAdminDN, String ldapAuthType, String ldapUBaseDN, String ldapGBaseDN, String usersId, String usersFilter, String usersMapping, String usersClasses, String usersSearchScope, String groupsId, String groupsFilter, String groupsMapping, String groupsClasses, String connPool, String connPoolMax, String connPoolTimeout, String connPoolProtocol, String ldapReadOnly, String ldapInsensitive, String searchLimit,String groupsSearchScope ) throws Exception {
+        Map<String, String> parameters = new HashMap<String, String>();
+        LdapConfigBean ldapConfigBean = prepareLdapConfigBean(ldapType, ldapUrl, ldapAdminDN, ldapAuthType, ldapUBaseDN, ldapGBaseDN, usersId, usersFilter, usersMapping, usersClasses, usersSearchScope, groupsId, groupsFilter, groupsMapping, groupsClasses, connPool, connPoolMax, connPoolTimeout, connPoolProtocol, ldapReadOnly, ldapInsensitive, searchLimit, groupsSearchScope, parameters);
+
+        try{
+            parameters.put("message","ok");
             ldapConfigService.createLdapConfig(ldapConfigBean);
-            return  LdapController_.ldap();
+        }
 
+        catch (Exception e){
+            parameters.put("connectionFailureLabel",connectionFailureLabel);
+        }
+        return createJSON(parameters);
     }
+
+    private LdapConfigBean prepareLdapConfigBean(String ldapType, String ldapUrl, String ldapAdminDN, String ldapAuthType, String ldapUBaseDN, String ldapGBaseDN, String usersId, String usersFilter, String usersMapping, String usersClasses, String usersSearchScope, String groupsId, String groupsFilter, String groupsMapping, String groupsClasses, String connPool, String connPoolMax, String connPoolTimeout, String connPoolProtocol, String ldapReadOnly, String ldapInsensitive, String searchLimit, String groupsSearchScope, Map<String, String> parameters) {
+        LdapConfigBean ldapConfigBean = new LdapConfigBean(ldapType,ldapUrl,ldapAdminDN,ldapAuthType,ldapUBaseDN,ldapGBaseDN,usersId,usersFilter,usersMapping,usersClasses,usersSearchScope,groupsId,groupsFilter,groupsMapping,groupsClasses,connPool,connPoolMax,connPoolTimeout,connPoolProtocol,ldapReadOnly,ldapInsensitive,searchLimit,groupsSearchScope);
+        parameters.put("ldapType", ldapType);
+        parameters.put("ldapUrl", ldapUrl);
+        parameters.put("ldapAdminDN",ldapAdminDN);
+        parameters.put("ldapAuthType",ldapAuthType);
+        parameters.put("ldapUBaseDN",ldapUBaseDN);
+        parameters.put("ldapGBaseDN",ldapGBaseDN);
+        parameters.put("usersId",usersId);
+        parameters.put("usersFilter",usersFilter);
+        parameters.put("usersMapping",usersMapping);
+        parameters.put("usersClasses",usersClasses);
+        parameters.put("usersSearchScope",usersSearchScope);
+        parameters.put("groupsId",groupsId);
+        parameters.put("groupsFilter",groupsFilter);
+        parameters.put("groupsMapping",groupsMapping);
+        parameters.put("groupsClasses",groupsClasses);
+        parameters.put("groupsSearchScope",groupsSearchScope);
+        parameters.put("connPool",connPool);
+        parameters.put("connPoolMax",connPoolMax);
+        parameters.put("connPoolTimeout",connPoolTimeout);
+        parameters.put("connPoolProtocol",connPoolProtocol);
+        parameters.put("ldapReadOnly",ldapReadOnly);
+        parameters.put("ldapInsensitive",ldapInsensitive);
+        parameters.put("searchLimit",searchLimit);
+        return ldapConfigBean;
+    }
+
     @Ajax
     @Resource
     public Response.Content<Stream.Char> checkConnection(String ldapUrl,String ldapAdminDN,String ldapAdminPwd,String ldapAuthType) throws Exception {
@@ -183,13 +222,13 @@ public class LdapController {
     @Resource
     public Response.Content<Stream.Char> resetSettings() {
         Map<String, String> parameters = new HashMap<String, String>();
-        ldapUrl=System.getProperty(ldapParameters.LDAP_CONF_URL) ;
-        ldapType=System.getProperty(ldapParameters.LDAP_CONF_TYPE) ;
-        ldapAdminDN=System.getProperty(ldapParameters.LDAP_CONF_ADMIN_DN);
-        ldapAdminPwd=System.getProperty(ldapParameters.LDAP_CONF_ADMIN_DN_PWD) ;
-        ldapAuthType=System.getProperty(ldapParameters.LDAP_CONF_AUTH_TYPE) ;
-        ldapUBaseDN=System.getProperty(ldapParameters.LDAP_CONF_USERS_BASE_DN) ;
-        ldapGBaseDN=System.getProperty(ldapParameters.LDAP_CONF_GROUPS_BASE_DN) ;
+        ldapUrl=System.getProperty(LdapParameters.LDAP_CONF_URL) ;
+        ldapType=System.getProperty(LdapParameters.LDAP_CONF_TYPE) ;
+        ldapAdminDN=System.getProperty(LdapParameters.LDAP_CONF_ADMIN_DN);
+        ldapAdminPwd=System.getProperty(LdapParameters.LDAP_CONF_ADMIN_DN_PWD) ;
+        ldapAuthType=System.getProperty(LdapParameters.LDAP_CONF_AUTH_TYPE) ;
+        ldapUBaseDN=System.getProperty(LdapParameters.LDAP_CONF_USERS_BASE_DN) ;
+        ldapGBaseDN=System.getProperty(LdapParameters.LDAP_CONF_GROUPS_BASE_DN) ;
         parameters.put("ldapUrl",ldapUrl);
         parameters.put("ldapType",ldapType);
         parameters.put("ldapAdminDN",ldapAdminDN);
@@ -201,21 +240,50 @@ public class LdapController {
     }
     @Ajax
     @Resource
-    public Response.Content<Stream.Char> searchUsers(String ldapUBaseDN, String usersFilter,String usersSearch)throws NamingException{
+    public Response.Content<Stream.Char> searchUsers(String ldapUBaseDN, String usersFilter,String usersSearch,String usersId)throws NamingException{
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("ldapUBaseDN",ldapUBaseDN) ;
         parameters.put("usersFilter",usersFilter) ;
         parameters.put("usersSearch",usersSearch) ;
-        ArrayList<SearchResult> list;
-        list = ldapAuthenticationService.getResultByCustomFilter(ldapUBaseDN, usersFilter,usersSearch);
-        LOG.info("number of users"+ list.size());
+        parameters.put("usersId",usersId) ;
+        try{
+            List<String> users=ldapAuthenticationService.searchUsers(ldapUBaseDN, usersFilter, usersSearch, usersId);
+            int size=users.size();
+            parameters.put("searchResults", String.valueOf(size))    ;
+            parameters.put("users", users.toString())    ;
+            for(String userNames:users){
+                parameters.put("message","ok");
+                parameters.put("userNames",userNames);
+            }
+        }
+        catch (Exception e){
 
-        LOG.info("Users sample");
-        parameters.put("list",list.toString()) ;
+        }
         return createJSON(parameters);
 
     }
+    @Ajax
+    @Resource
+    public Response.Content<Stream.Char> searchGroups(String ldapGBaseDN, String groupsFilter,String groupsSearch,String groupsId)throws NamingException{
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("ldapGBaseDN",ldapGBaseDN) ;
+        parameters.put("groupsFilter",groupsFilter) ;
+        parameters.put("groupsSearch",groupsSearch) ;
+        parameters.put("groupsId",groupsId) ;
+        try{
+            ArrayList<SearchResult> groups=ldapAuthenticationService.searchGroups(ldapGBaseDN, groupsFilter, groupsSearch, groupsId);
+            int size=groups.size();
+            parameters.put("message","ok");
+            parameters.put("searchResults", String.valueOf(size))    ;
+            parameters.put("groups", groups.toString())    ;
 
+        }
+        catch (Exception e){
+
+        }
+        return createJSON(parameters);
+
+    }
     /**
      * create a object JSON from the map.
      *
