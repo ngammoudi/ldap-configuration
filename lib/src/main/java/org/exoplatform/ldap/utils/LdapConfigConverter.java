@@ -15,10 +15,10 @@ public class LdapConfigConverter {
     public static final String EXO_LDAP_CONFIG = "exo:ldapConfig";
     public static final String EXO_LDAP_TYPE = "exo:ldapType";
     public static final String EXO_LDAP_URL = "exo:ldapUrl";
-    public static final String EXO_LDAP_ADMIN_DN = "exo:ldapAdminDn";
+    public static final String EXO_LDAP_ADMIN_DN = "exo:ldapAdminDN";
     public static final String EXO_LDAP_ADMIN_PWD = "exo:ldapAuthentication";
-    public static final String EXO_LDAP_ADMIN_U_BASE = "exo:ldapUBaseDn";
-    public static final String EXO_LDAP_ADMIN_G_BASE = "exo:ldapGBaseDn";
+    public static final String EXO_LDAP_ADMIN_U_BASE = "exo:ldapUBaseDN";
+    public static final String EXO_LDAP_ADMIN_G_BASE = "exo:ldapGBaseDN";
     public static final String EXO_LDAP_POOL="exo:ldapPool";
     public static final String EXO_LDAP_POOL_MAX="exo:ldapPoolMax";
     public static final String EXO_LDAP_POOL_TIMEOUT="exo:ldapPoolTimeout";
@@ -42,9 +42,9 @@ public class LdapConfigConverter {
       try {
           ldapConfig.setProperty(EXO_LDAP_TYPE, ldapConfigBean.getLdapType());
           ldapConfig.setProperty(EXO_LDAP_URL, ldapConfigBean.getLdapUrl());
-          ldapConfig.setProperty(EXO_LDAP_ADMIN_DN, ldapConfigBean.getLdapAdminDn());
+          ldapConfig.setProperty(EXO_LDAP_ADMIN_DN, ldapConfigBean.getLdapAdminDN());
           ldapConfig.setProperty(EXO_LDAP_ADMIN_PWD, ldapConfigBean.getLdapAuthentication());
-          ldapConfig.setProperty(EXO_LDAP_ADMIN_U_BASE, ldapConfigBean.getLdapUBaseDn());
+          ldapConfig.setProperty(EXO_LDAP_ADMIN_U_BASE, ldapConfigBean.getLdapUBaseDN());
           ldapConfig.setProperty(EXO_LDAP_ADMIN_G_BASE, ldapConfigBean.getLdapGBaseDN());
           ldapConfig.setProperty(EXO_LDAP_POOL, ldapConfigBean.getConnPool());
           ldapConfig.setProperty(EXO_LDAP_POOL_TIMEOUT, ldapConfigBean.getConnPoolTimeout());

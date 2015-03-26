@@ -222,22 +222,34 @@ public class LdapController {
     @Resource
     public Response.Content<Stream.Char> resetSettings() {
         Map<String, String> parameters = new HashMap<String, String>();
-        ldapUrl=System.getProperty(LdapParameters.LDAP_CONF_URL) ;
-        ldapType=System.getProperty(LdapParameters.LDAP_CONF_TYPE) ;
-        ldapAdminDN=System.getProperty(LdapParameters.LDAP_CONF_ADMIN_DN);
-        ldapAdminPwd=System.getProperty(LdapParameters.LDAP_CONF_ADMIN_DN_PWD) ;
-        ldapAuthType=System.getProperty(LdapParameters.LDAP_CONF_AUTH_TYPE) ;
-        ldapUBaseDN=System.getProperty(LdapParameters.LDAP_CONF_USERS_BASE_DN) ;
-        ldapGBaseDN=System.getProperty(LdapParameters.LDAP_CONF_GROUPS_BASE_DN) ;
+        loadDefaultSettings();
+        putDefaultSettings(parameters);
+        return createJSON(parameters);
+    }
+
+    private void putDefaultSettings(Map<String, String> parameters) {
         parameters.put("ldapUrl",ldapUrl);
         parameters.put("ldapType",ldapType);
         parameters.put("ldapAdminDN",ldapAdminDN);
         parameters.put("ldapAdminPwd",ldapAdminPwd);
         parameters.put("ldapAuthType",ldapAuthType);
-        parameters.put("ldapUBaseDN",ldapUBaseDN);
-        parameters.put("ldapGBaseDN",ldapGBaseDN);
-        return createJSON(parameters);
+        parameters.put("ldapUBaseDN", ldapUBaseDN);
+        parameters.put("ldapGBaseDN", ldapGBaseDN);
+        parameters.put("usersId", usersId);
+        parameters.put("usersFilter", usersFilter);
+        parameters.put("usersMapping", usersMapping);
+        parameters.put("usersClasses", usersClasses);
+        parameters.put("usersSearchScope", usersSearchScope);
+        parameters.put("groupsId", groupsId);
+        parameters.put("groupsFilter", groupsFilter);
+        parameters.put("groupsMapping", groupsMapping);
+        parameters.put("groupsClasses", groupsClasses);
+        parameters.put("groupsSearchScope", groupsSearchScope);
+        parameters.put("connPoolMax", connPoolMax);
+        parameters.put("connPoolTimeout", connPoolTimeout);
+        parameters.put("searchLimit", searchLimit);
     }
+
     @Ajax
     @Resource
     public Response.Content<Stream.Char> searchUsers(String ldapUBaseDN, String usersFilter,String usersSearch,String usersId)throws NamingException{
@@ -315,4 +327,5 @@ public class LdapController {
         };
         return json;
     }
+
 }

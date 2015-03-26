@@ -18,7 +18,7 @@
                 <valueConstraints />
             </propertyDefinition>
 
-            <propertyDefinition name="exo:ldapAdminDn" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+            <propertyDefinition name="exo:ldapAdminDN" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
                 <valueConstraints />
             </propertyDefinition>
 
@@ -50,7 +50,7 @@
                 <valueConstraints />
             </propertyDefinition>
 
-            <propertyDefinition name="exo:ldapUBaseDn" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+            <propertyDefinition name="exo:ldapUBaseDN" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
                 <valueConstraints />
             </propertyDefinition>
 
@@ -74,7 +74,7 @@
                 <valueConstraints />
             </propertyDefinition>
 
-            <propertyDefinition name="exo:ldapGBaseDn" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+            <propertyDefinition name="exo:ldapGBaseDN" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
                 <valueConstraints />
             </propertyDefinition>
 

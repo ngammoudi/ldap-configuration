@@ -6,9 +6,9 @@ package org.exoplatform.ldap.model;
 public class LdapConfigBean {
     private String ldapType;
     private String ldapUrl;
-    private String ldapAdminDn;
+    private String ldapAdminDN;
     private String ldapAuthentication;
-    private String ldapUBaseDn;
+    private String ldapUBaseDN;
     private String ldapGBaseDN;
     private String usersId;
     private String usersFilter;
@@ -33,12 +33,12 @@ public class LdapConfigBean {
     public LdapConfigBean() {
     }
 
-    public LdapConfigBean(String ldapType, String ldapUrl, String ldapAdminDn, String ldapAuthentication, String ldapUBaseDn, String ldapGBaseDN, String usersId, String usersFilter, String usersMapping, String usersClasses, String usersSearchScope, String groupsId, String groupsFilter, String groupsMapping, String groupsClasses, String connPool, String connPoolMax, String connPoolTimeout, String connPoolProtocol, String ldapReadOnly, String ldapInsensitive, String searchLimit, String groupsSearchScope) {
+    public LdapConfigBean(String ldapType, String ldapUrl, String ldapAdminDN, String ldapAuthentication, String ldapUBaseDN, String ldapGBaseDN, String usersId, String usersFilter, String usersMapping, String usersClasses, String usersSearchScope, String groupsId, String groupsFilter, String groupsMapping, String groupsClasses, String connPool, String connPoolMax, String connPoolTimeout, String connPoolProtocol, String ldapReadOnly, String ldapInsensitive, String searchLimit, String groupsSearchScope) {
         this.ldapType = ldapType;
         this.ldapUrl = ldapUrl;
-        this.ldapAdminDn = ldapAdminDn;
+        this.ldapAdminDN = ldapAdminDN;
         this.ldapAuthentication = ldapAuthentication;
-        this.ldapUBaseDn = ldapUBaseDn;
+        this.ldapUBaseDN = ldapUBaseDN;
         this.ldapGBaseDN = ldapGBaseDN;
         this.usersId = usersId;
         this.usersFilter = usersFilter;
@@ -67,16 +67,16 @@ public class LdapConfigBean {
         return ldapUrl;
     }
 
-    public String getLdapAdminDn() {
-        return ldapAdminDn;
+    public String getLdapAdminDN() {
+        return ldapAdminDN;
     }
 
     public String getLdapAuthentication() {
         return ldapAuthentication;
     }
 
-    public String getLdapUBaseDn() {
-        return ldapUBaseDn;
+    public String getLdapUBaseDN() {
+        return ldapUBaseDN;
     }
 
     public String getLdapGBaseDN() {

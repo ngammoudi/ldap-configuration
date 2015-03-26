@@ -1,4 +1,9 @@
 $(document).ready(function(){
+        $("#actionfail").hide();
+        $("#actionsuccess").hide();
+        $("#accordion").accordion({
+			heightStyle: 'content'
+		});
 	$('.input_control').prop('checked', false);
 		$('.input_control').click(function(){
 			if($('input[name='+ $(this).prop('value')+']').prop('disabled') == false){
@@ -41,8 +46,21 @@ function resetSettings() {
         $("#ldapAdminDN").val(data.ldapAdminDN);
         $("#ldapAdminPwd").val(data.ldapAdminPwd);
         $("#ldapAuthType").val(data.ldapAuthType);
-        $("#ldapUBaseDn").val(data.ldapUBaseDN);
+        $("#ldapUBaseDN").val(data.ldapUBaseDN);
         $("#ldapGBaseDN").val(data.ldapGBaseDN);
+        $("#usersId").val(data.usersId);
+        $("#usersFilter").val(data.usersFilter);
+        $("#usersMapping").val(data.usersMapping);
+        $("#usersClasses").val(data.usersClasses);
+        $("#usersSearchScope").val(data.usersSearchScope);
+        $("#groupsId").val(data.groupsId);
+        $("#groupsFilter").val(data.groupsFilter);
+        $("#groupsMapping").val(data.groupsMapping);
+        $("#groupsClasses").val(data.groupsClasses);
+        $("#groupsSearchScope").val(data.groupsSearchScope);
+        $("#connPoolMax").val(data.connPoolMax);
+        $("#connPoolTimeout").val(data.connPoolTimeout);
+        $("#searchLimit").val(data.searchLimit);
         disableFields();
 
     });
@@ -58,14 +76,17 @@ function disableFields(){
   $("#ldapGBaseDN").prop('disabled',true);
   $("#usersId").prop('disabled',true);
   $("#usersFilter").prop('disabled',true);
-  $("#usersAttr").prop('disabled',true);
+  $("#usersMapping").prop('disabled',true);
   $("#usersClasses").prop('disabled',true);
-  $("#usersSearch").prop('disabled',true);
+  $("#usersSearchScope").prop('disabled',true);
   $("#groupsId").prop('disabled',true);
   $("#groupsFilter").prop('disabled',true);
-  $("#groupsAttr").prop('disabled',true);
+  $("#groupsMapping").prop('disabled',true);
   $("#groupsClasses").prop('disabled',true);
-  $("#groupsSearch").prop('disabled',true);
+  $("#groupsSearchScope").prop('disabled',true);
+  $("#connPoolMax").prop('disabled',true);
+  $("#connPoolTimeout").prop('disabled',true);
+  $("#searchLimit").prop('disabled',true);
   $('.input_control').prop('checked', false);
 }
 function checkConnection() {
@@ -144,6 +165,32 @@ var groupsId= $("#groupsId").val();
     });
 }
 function createLdapConfig() {
+getFieldsValues();
+
+    $('#ldapSettings').jzAjax({
+        url: "LdapController.createLdapConfig()" ,
+        data: {"ldapType":ldapType,"ldapUrl":ldapUrl,"ldapAdminDN":ldapAdminDN,"ldapAuthType":ldapAuthType,"ldapUBaseDN":ldapUBaseDN,"usersFilter":usersFilter,
+               "usersMapping":usersMapping,"usersClasses":usersClasses,"usersSearchScope":usersSearchScope,"groupsId":groupsId,"groupsFilter":groupsFilter,
+               "groupsMapping":groupsMapping,"groupsClasses":groupsClasses,"groupsSearchScope":groupsSearchScope,"connPool":connPool,"connPoolMax":connPoolMax,
+               "connPoolTimeout":connPoolTimeout,"connPoolProtocol":connPoolProtocol,"ldapReadOnly":ldapReadOnly,"ldapInsensitive":ldapInsensitive,
+               "searchLimit":searchLimit,"searchScope":searchScope}
+    }).done(function(data) {
+     if(data.message=="ok") {
+                $("#actionsuccess").html('<i class="uiIconSuccess"></i>'+"LDAP parameters saved successfully");
+                $("#actionsuccess").width("600px") ;
+                $("#actionsuccess").css("left",($( window ).width()/2) - ($("#actionsuccess").width()/2));
+                $("#actionsuccess").show().delay(10000).fadeOut();
+            }
+     else  {
+                $("#actionfail").html('<i class="uiIconError"></i>'+"Failed to save LDAP parameters");
+                $("#actionfail").width("600px");
+                $("#actionfail").css("left",($( window ).width()/2) - ($("#actionfail").width()/2));
+                $("#actionfail").show().delay(10000).fadeOut();
+           }
+
+    });
+}
+function getFieldsValues(){
 var ldapType = $("#ldapType").val();
 var ldapUrl = $("#ldapUrl").val();
 var ldapAdminDN  = $("#ldapAdminDN").val();
@@ -168,29 +215,6 @@ var ldapReadOnly=$("#ldapReadOnly").val() ;
 var ldapInsensitive=$("#ldapInsensitive").val() ;
 var searchLimit=$("#searchLimit").val() ;
 var searchScope=$("#searchScope").val() ;
-
-    $('#ldapSettings').jzAjax({
-        url: "LdapController.createLdapConfig()" ,
-        data: {"ldapType":ldapType,"ldapUrl":ldapUrl,"ldapAdminDN":ldapAdminDN,"ldapAuthType":ldapAuthType,"ldapUBaseDN":ldapUBaseDN,"usersFilter":usersFilter,
-               "usersMapping":usersMapping,"usersClasses":usersClasses,"usersSearchScope":usersSearchScope,"groupsId":groupsId,"groupsFilter":groupsFilter,
-               "groupsMapping":groupsMapping,"groupsClasses":groupsClasses,"groupsSearchScope":groupsSearchScope,"connPool":connPool,"connPoolMax":connPoolMax,
-               "connPoolTimeout":connPoolTimeout,"connPoolProtocol":connPoolProtocol,"ldapReadOnly":ldapReadOnly,"ldapInsensitive":ldapInsensitive,
-               "searchLimit":searchLimit,"searchScope":searchScope}
-    }).done(function(data) {
-     if(data.message=="ok") {
-                $("#actionsuccess").html('<i class="uiIconSuccess"></i>'+"LDAP parameters saved successfully");
-                $("#actionsuccess").width("600px") ;
-                $("#actionsuccess").css("left",($( window ).width()/2) - ($("#actionsuccess").width()/2));
-                $("#actionsuccess").show().delay(10000).fadeOut();
-            }
-     else  {
-                $("#actionfail").html('<i class="uiIconError"></i>'+"Failed to save LDAP parameters");
-                $("#actionfail").width("600px");
-                $("#actionfail").css("left",($( window ).width()/2) - ($("#actionfail").width()/2));
-                $("#actionfail").show().delay(10000).fadeOut();
-           }
-
-    });
 }
 $(document).ready(function() {
     $("#accordion").accordion({

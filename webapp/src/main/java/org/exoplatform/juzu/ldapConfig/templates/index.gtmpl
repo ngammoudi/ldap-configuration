@@ -24,12 +24,6 @@
 <!DOCTYPE html>
 <html>  
 <head>
-     <script>
-       $(function() {;
-         $("#actionfail").hide();
-         $("#actionsuccess").hide();
-       });
-       </script>
 </head>
 
 <body>
@@ -71,11 +65,11 @@
                            </label>
                  		</div>
                  		<div class="col">
-                  			<select id="ldapType" name="ldapType" class="input-lg select-group form-control" value="${ldapType}"disabled="true">
-                               <option selected class="ldapTypePlaceholder">generic</option>
-                               <option selected class="ldapTypePlaceholder">ldap</option>
-                               <option selected class="ldapTypePlaceholder">opends</option>
-                               <option selected class="ldapTypePlaceholder">ad</option>
+                  			<select id="ldapType" name="ldapType" value="${ldapType}" disabled="true">
+                               <option selected>ldap</option>
+                               <option selected>opends</option>
+                               <option selected>ad</option>
+                               <option selected>generic</option>
                             </select>
                  	</div>
                 </div>
@@ -134,9 +128,10 @@
                            </label>
                     </div>
                     <div class="col">
-                            <select id="ldapAuthType" name="ldapAuthType" class="input-lg select-group form-control" value="${ldapAuthType}" disabled="true">
-                                <option selected >Simple</option>
+                            <select id="ldapAuthType" name="ldapAuthType" value="${ldapAuthType}" disabled="true">
+                                <option selected >None</option>
                                 <option selected ">DIGEST-MD5</option>
+                                <option selected >Simple</option>
                             </select>
                     </div>
                 </div>
@@ -177,7 +172,6 @@
 
                     <!-- Button -->
                         <div class="control-group">
-                            <label class="control-label" for="createLdapConfig"></label>
                             <div class="controls">
                              	<input type="button" class="btn btn-primary" value="${testLabel}" onclick="checkConnection();" />
                             </div>
@@ -246,13 +240,14 @@
                 </div>
                 <div class="col">
                     <select id="usersSearchScope" name="usersSearchScope" value="${usersSearchScope}" disabled="true">
-                        <option selected >subTree</option>
+                        <option selected >Base</option>
+                        <option selected >One</option>
+                        <option selected >SubTree</option>
                     </select>
                 </div>
             </div>
                  <!-- Button -->
                  <div class="control-group">
-                    <label class="control-label" for="createLdapConfig"></label>
                         <div class="controls">
                            <input type="button" class="btn btn-primary" value="${searchLabel}" onclick="searchUsers();" />
                         </div>
@@ -321,15 +316,16 @@
                 </div>
                 <div class="col">
                     <select id="groupsSearchScope" name="groupsSearchScope" value="${groupsSearchScope}" disabled="true">
-                        <option selected >subTree</option>
+                        <option selected >Base</option>
+                        <option selected >One</option>
+                        <option selected >SubTree</option>
                     </select>
                 </div>
             </div>
             <!-- Button -->
             <div class="control-group">
-                 <label class="control-label" for="createLdapConfig"></label>
                     <div class="controls">
-                        <input type="button" class="btn btn-primary" value="${searchLabel}" onclick="searchGroups();" />
+                        <input type="button" class="btn btn-primary" value="${searchLabel}" onclick="searchGroups();"/>
                         <input type="button" class="btn btn-primary" value="${saveLabel}" onclick="createLdapConfig();"/>
                     </div>
             </div>

@@ -61,11 +61,11 @@ public class LdapAuthenticationServiceImpl implements LdapAuthenticationService 
     public List<String> searchUsers(String ldapUBaseDN, String searchFilter, String searchScope, String usersId) throws NamingException {
         SearchControls searchControls = new SearchControls();
         List<String> attributes=new ArrayList<String>();
-        if(searchScope.equals("subTree")){
+        if(searchScope.equals("SubTree")){
             searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
         }
-        else if(searchScope.equals("oneLevel")){
+        else if(searchScope.equals("One")){
             searchControls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
 
         }
